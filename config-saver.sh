@@ -40,6 +40,19 @@ do
 done
 
 
+echo "Saving list of installed package..."
 dpkg -l > $dest/packages.list
+
+
+echo "Saving installed CRONs..."
+for user in $(cut -f1 -d: /etc/passwd);
+do
+    cron=`crontab -u $user -l 2>&1`
+    if [[ $cron != no* ]]
+    then
+        echo $user >> $dest/crons
+        echo "$cron" | tail -n+22 >> $dest/crons
+    fi
+done
 
 echo "Files copied. Don't forget to commit !"
