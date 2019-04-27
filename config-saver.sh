@@ -44,15 +44,26 @@ echo "Saving list of installed package..."
 dpkg -l > $dest/packages.list
 
 
-echo "Saving installed CRONs..."
-for user in $(cut -f1 -d: /etc/passwd);
-do
-    cron=`crontab -u $user -l 2>&1`
+
+function save_cron_of_user () {
+    cron=`crontab -u $1 -l 2>&1`
     if [[ $cron != no* ]]
     then
-        echo $user >> $dest/crons
+        echo $1 >> $dest/crons
         echo "$cron" | tail -n+22 >> $dest/crons
     fi
-done
+}
+
+echo "Saving installed CRONs..."
+if [[ "$(id -u)" != "0" ]]; then
+    echo "Script must be launched as root to save CRONs of other users."
+
+    save_cron_of_user $USER
+else
+    for user in $(cut -f1 -d: /etc/passwd);
+    do
+        save_cron_of_user $user
+    done
+fi
 
 echo "Files copied. Don't forget to commit !"
