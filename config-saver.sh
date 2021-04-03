@@ -65,8 +65,9 @@ else
         save_cron_of_user $user
     done
 
-    # If we are executed as root, make all saved files RW to everyone, to ease file save later
-    chmod -R a+rw $dest
+    # If we are executed as root, give files to the initial user, to ease later file manipulation:
+    user=${SUDO_USER:-$(whoami)}
+    chown -R $user:$user $dest
 fi
 
 echo "Files copied. Don't forget to commit !"
