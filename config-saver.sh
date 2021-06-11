@@ -1,6 +1,10 @@
 #!/bin/bash
 
-
+if [ ! -f tosave ]
+then
+    echo "File 'tosave' is not present."
+    exit 1
+fi
 
 name=`head -n 1 tosave` # folder where files will be copied
 
