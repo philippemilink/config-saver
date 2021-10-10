@@ -22,6 +22,21 @@ else
 fi
 
 
+# Check we are allowed to  copy all files:
+for file in `tail -n +2 tosave`
+do
+	if [ ! -e $file ]
+	then
+		echo "$file doesn't exist."
+		exit 1
+	elif [ ! -r $file ]
+	then
+		echo "Can't read $file. Try to execute $0 with root user ?"
+		exit 1
+	fi
+done
+
+
 dest=`readlink -f $name` # full path of saving folder
 
 
@@ -60,7 +75,7 @@ function save_cron_of_user () {
 
 echo "Saving installed CRONs..."
 if [[ "$(id -u)" != "0" ]]; then
-    echo "Script must be launched as root to save CRONs of other users."
+    echo "!! Script must be launched as root to save CRONs of other users. !!"
 
     save_cron_of_user $USER
 else
