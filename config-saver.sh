@@ -27,8 +27,7 @@ for file in `tail -n +2 tosave`
 do
 	if [ ! -e $file ]
 	then
-		echo "$file doesn't exist."
-		exit 1
+		echo "Warning: $file doesn't exist."
 	elif [ ! -r $file ]
 	then
 		echo "Can't read $file. Try to execute $0 with root user ?"
@@ -49,7 +48,7 @@ do
 
 	if [ ! -e $file ]
 	then
-		echo "$file doesn't exist."
+		continue
 	elif [ -d $file ]
 	then
 		cp -r --parents $file $dest
